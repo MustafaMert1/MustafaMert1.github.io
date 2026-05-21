@@ -16,7 +16,6 @@
             --border-color: #e9ecef;
         }
 
-        /* Tüm ekranı kaplaması için margin/padding sıfırlandı */
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-color);
@@ -42,7 +41,6 @@
             flex-direction: column;
         }
 
-        /* Header Tasarımı */
         header {
             display: flex;
             justify-content: space-between;
@@ -88,7 +86,6 @@
 
         .payment-banner strong { color: #d32f2f; }
 
-        /* Tablo Tasarımı */
         .tables-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -143,7 +140,6 @@
             font-weight: 500;
         }
 
-        /* Alt Bilgi */
         footer {
             margin-top: 1.5vh;
             text-align: center;
@@ -159,7 +155,6 @@
             color: var(--gold-primary);
         }
 
-        /* Mobil Uyumluluk */
         @media (max-width: 900px) {
             body {
                 height: auto;
@@ -241,7 +236,6 @@
         const SHEET_ID = '12PVBJ0OrpewrVomn_x5NLHE7jAHgmZnbZkcORgrZYm4';
         const GID = '1292736467';
         
-        // CSV yerine TSV (Sekmeyle Ayrılmış) formatı ile çekiyoruz. Bu sayede içindeki virgüller kodu bozmaz.
         const TSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=tsv&gid=${GID}`;
 
         function updateTime() {
@@ -257,8 +251,6 @@
                 
                 const textData = await response.text();
                 
-                // Güvenlik Önlemi: Eğer dönen veri HTML sayfasıysa (Google Drive Giriş Sayfası vs.),
-                // bu tablonun "Web'de Yayınla" ayarının YAPILMADIĞI anlamına gelir.
                 if (textData.toLowerCase().includes("<!doctype html>")) {
                     throw new Error("Tablo 'Web'de Yayınla' olarak ayarlanmamış.");
                 }
@@ -279,20 +271,16 @@
         }
 
         function cleanPrice(price) {
-            // Hücre boşsa, 0 ise veya Excel hatası varsa "-" basar
             if (!price || price === "0" || price === "" || price === "#DIV/0!" || price === "#NUM!") return "-";
             return price;
         }
 
         function parseAndRender(tsvData) {
-            // Veriyi "\t" (Sekme) ve satır başı karakterleri ile güvenli şekilde parçalıyoruz
             const rows = tsvData.split('\n').map(row => row.split('\t').map(cell => cell.replace(/\r/g, '').trim()));
             
             let htmlLeft = '';
             let htmlRight = '';
 
-            // SÜTUN KOORDİNATLARI: (D=3, E=4, F=5) ve (I=8, J=9, K=10)
-            // SATIR KOORDİNATLARI: Excel 3. Satır = JavaScript [2]
             
             const leftData = [
                 { name: "24 AYAR GRAM<br><small>(50-100)</small>", buy: rows[2]?.[3], list: rows[2]?.[4], discount: rows[2]?.[5] },
