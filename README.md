@@ -2,74 +2,85 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benim Web Sitem</title>
+    <meta http-equiv="refresh" content="60">
+    <title>Canlı Altın Fiyatları</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .kart {
-            background: rgba(255,255,255,0.08);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(0,0,0,0.4);
-            width: 350px;
-        }
-
-        h1 {
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #cbd5e1;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            background: #3b82f6;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #2563eb;
-            transform: scale(1.05);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <div class="kart">
-        <h1>Merhaba Dünya 👋</h1>
-        <p>Bu benim ilk modern HTML sayfam.</p>
+<?php
 
-        <button onclick="mesajGoster()">
-            Tıkla
-        </button>
+$json = file_get_contents(
+    "https://docs.google.com/spreadsheets/d/12PVBJ0OrpewrVomn_x5NLHE7jAHgmZnbZkcORgrZYm4/gviz/tq?tqx=out:json"
+);
+
+$json = substr($json, 47, -2);
+
+$data = json_decode($json, true);
+
+?>
+
+<div class="header">
+    <div>
+        <h1>FURKAN ÖZTAŞ KUYUMCULUK</h1>
+        <p>Canlı Fiyat Ekranı</p>
     </div>
 
-    <script>
-        function mesajGoster() {
-            alert("Butona tıkladın!");
-        }
-    </script>
+    <div class="time">
+        <?= date("d.m.Y H:i") ?>
+    </div>
+</div>
+
+<table>
+
+    <tr>
+        <th>ÜRÜN</th>
+        <th>ALIŞ</th>
+        <th>SATIŞ</th>
+        <th>İNDİRİMLİ</th>
+    </tr>
+
+    <tr>
+        <td>24 AYAR GRAM</td>
+        <td>6571</td>
+        <td>7031</td>
+        <td>6643</td>
+    </tr>
+
+    <tr>
+        <td>22 AYAR BİLEZİK</td>
+        <td>6004</td>
+        <td>7091</td>
+        <td>6241</td>
+    </tr>
+
+    <tr>
+        <td>ÇEYREK</td>
+        <td>10600</td>
+        <td>11546</td>
+        <td>10911</td>
+    </tr>
+
+    <tr>
+        <td>YARIM</td>
+        <td>21200</td>
+        <td>23022</td>
+        <td>21756</td>
+    </tr>
+
+    <tr>
+        <td>TAM</td>
+        <td>42268</td>
+        <td>45763</td>
+        <td>43246</td>
+    </tr>
+
+</table>
+
+<div class="footer">
+    Sistemimiz 1 dakika gecikmeli çalışmaktadır
+</div>
 
 </body>
 </html>
