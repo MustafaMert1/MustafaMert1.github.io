@@ -16,27 +16,30 @@
             --border-color: #e9ecef;
         }
 
+        /* Tüm ekranı kaplaması için margin/padding sıfırlandı */
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh; /* Tam ekran yüksekliği */
+            overflow: hidden; /* Masaüstünde scroll bar'ı gizler */
+            box-sizing: border-box;
         }
 
         .container {
-            max-width: 1200px;
             width: 100%;
+            height: 100%;
             background: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            padding: 30px;
+            padding: 2vh 3vw; /* Ekran boyutuna göre dinamik boşluk */
             box-sizing: border-box;
-            border-top: 5px solid var(--gold-primary);
+            border-top: 1vh solid var(--gold-primary);
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header Tasarımı */
@@ -45,19 +48,17 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--gold-light);
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 20px;
+            padding-bottom: 1.5vh;
+            margin-bottom: 1.5vh;
         }
 
         .logo-area {
-            text-align: center;
+            text-align: left;
         }
 
         .logo-text {
             font-family: 'Playfair Display', serif;
-            font-size: 28px;
+            font-size: 3vh; /* Dinamik yazı boyutu */
             font-weight: 700;
             color: var(--gold-primary);
             letter-spacing: 1px;
@@ -65,7 +66,7 @@
         }
 
         .contact-info {
-            font-size: 14px;
+            font-size: 1.8vh;
             font-weight: 600;
             text-align: right;
             color: var(--text-muted);
@@ -80,26 +81,28 @@
             text-align: center;
             background-color: var(--gold-light);
             color: #8c6b32;
-            padding: 15px;
+            padding: 1.5vh;
             border-radius: 8px;
             font-weight: 600;
-            margin-bottom: 30px;
-            font-size: 15px;
+            margin-bottom: 2vh;
+            font-size: 1.8vh;
         }
 
         .payment-banner strong {
             color: #d32f2f;
         }
 
-        /* Tablo Tasarımı */
+        /* Tablo Tasarımı - Ekrana yayılması için flex-grow eklendi */
         .tables-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 2vw;
+            flex-grow: 1; /* Kalan tüm boşluğu doldurur */
         }
 
         table {
             width: 100%;
+            height: 100%; /* Tablonun dikeyde uzamasını sağlar */
             border-collapse: collapse;
             background: var(--card-bg);
             overflow: hidden;
@@ -111,25 +114,27 @@
             background-color: var(--gold-primary);
             color: white;
             font-weight: 600;
-            padding: 15px 10px;
-            font-size: 14px;
+            padding: 1.5vh 1vw;
+            font-size: 1.8vh;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            height: 5vh;
         }
 
         td {
-            padding: 15px 10px;
+            padding: 1vh 1vw;
             text-align: center;
             border-bottom: 1px solid var(--border-color);
-            font-size: 22px;
+            font-size: 3vh; /* Rakamların ekranda büyük ve net görünmesi için */
             font-weight: 700;
         }
 
         td:first-child {
-            font-size: 14px;
+            font-size: 2vh;
             font-weight: 600;
             text-align: left;
             color: var(--text-muted);
+            line-height: 1.2;
         }
 
         tr:last-child td {
@@ -140,22 +145,21 @@
             background-color: #fafafa;
         }
 
-        /* Liste fiyatı üzerini çizme */
         .strike {
             text-decoration: line-through;
             color: #999;
-            font-size: 18px;
+            font-size: 2.2vh;
             font-weight: 500;
         }
 
         /* Alt Bilgi */
         footer {
-            margin-top: 30px;
+            margin-top: 1.5vh;
             text-align: center;
-            font-size: 14px;
+            font-size: 1.6vh;
             color: var(--text-muted);
             font-weight: 500;
-            padding-top: 20px;
+            padding-top: 1vh;
             border-top: 1px solid var(--border-color);
         }
 
@@ -164,18 +168,40 @@
             color: var(--gold-primary);
         }
 
-        /* Mobil Uyumluluk */
+        /* Mobil Uyumluluk - Mobilde kaydırmaya izin ver ve alt alta diz */
         @media (max-width: 900px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto; /* Mobilde scroll açılır */
+            }
+            .container {
+                padding: 15px;
+            }
             .tables-wrapper {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             header {
                 flex-direction: column;
                 text-align: center;
             }
+            .logo-area {
+                text-align: center;
+                margin-bottom: 10px;
+            }
             .contact-info {
                 text-align: center;
             }
+            /* Mobilde dinamik (vh) fontları sabitleyelim ki çok küçülmesin */
+            .logo-text { font-size: 24px; }
+            .contact-info { font-size: 14px; }
+            .payment-banner { font-size: 14px; padding: 10px; }
+            td { font-size: 20px; padding: 10px; }
+            td:first-child { font-size: 14px; }
+            th { font-size: 12px; padding: 10px; height: auto; }
+            .strike { font-size: 16px; }
+            footer { font-size: 12px; margin-top: 20px; }
         }
     </style>
 </head>
@@ -185,7 +211,7 @@
         <header>
             <div class="logo-area">
                 <h1 class="logo-text">FURKAN ÖZTAŞ</h1>
-                <span style="letter-spacing: 3px; font-size: 12px; color: var(--text-muted);">KUYUMCULUK</span>
+                <span style="letter-spacing: 3px; font-size: 1.5vh; color: var(--text-muted);">KUYUMCULUK</span>
             </div>
             
             <div class="contact-info">
@@ -273,16 +299,6 @@
             let htmlLeft = '';
             let htmlRight = '';
 
-            // Görseldeki tabloya göre satır indeksleri (Excel'in yapısına göre bu indeksleri ayarlaman gerekebilir)
-            // Varsayım: Sol tablo ilk 7 satır, Sağ tablo sonraki 7 satır veya yan yana kolonlar.
-            // Google Sheets tablonuz görseldeki gibi tasarlanmışsa, verileri manuel çekmek gerekebilir.
-            
-            // DEMO VERİ DOLDURMA (Görselinizdeki yapıya uygun statik şablon oluşturucu)
-            // Eğer Google Sheets verileriniz görseldeki gibi sağ/sol hücrelere dağılmışsa 
-            // array indekslerini [row][col] şeklinde belirtebilirsiniz. 
-            // Aşağıdaki yapı örnek olarak görseldeki verilerle doldurulmuştur. Gerçek veriyi 'rows' değişkeninden alabilirsiniz.
-
-            // Sol Tablo Statik Örnek:
             const leftData = [
                 { name: "24 AYAR GRAM<br><small>(50-100)</small>", buy: rows[2]?.[1] || "6583", list: rows[2]?.[2] || "7050", discount: rows[2]?.[3] || "6662" },
                 { name: "24 AYAR GRAM<br><small>(5-10-20)</small>", buy: rows[3]?.[1] || "6596", list: rows[3]?.[2] || "7060", discount: rows[3]?.[3] || "6672" },
@@ -303,7 +319,6 @@
                 { name: "ONS ALTIN", buy: rows[8]?.[6] || "4532", list: rows[8]?.[7] || "-", discount: rows[8]?.[8] || "4532" },
             ];
 
-            // Tabloyu Oluştur (Liste fiyatında 0 olanları veya #DIV/0! olanları temizleme mantığı ile)
             leftData.forEach(item => {
                 let listPrice = (item.list === "0" || item.list === "" || item.list === "#DIV/0!") ? "-" : `<span class="strike">${item.list}</span>`;
                 let discPrice = (item.discount === "0") ? "-" : item.discount;
@@ -320,10 +335,9 @@
             document.getElementById('tbody-right').innerHTML = htmlRight;
         }
 
-        // Sayfa yüklendiğinde ve her 60 saniyede bir veriyi çek
         window.onload = () => {
             fetchGoldPrices();
-            setInterval(fetchGoldPrices, 60000); // 1 dakikada bir yeniler
+            setInterval(fetchGoldPrices, 60000); 
         };
     </script>
 </body>
