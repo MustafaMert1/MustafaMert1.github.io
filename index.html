@@ -26,8 +26,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh; /* Tam ekran yüksekliği */
-            overflow: hidden; /* Masaüstünde scroll bar'ı gizler */
+            height: 100vh;
+            overflow: hidden;
             box-sizing: border-box;
         }
 
@@ -35,7 +35,7 @@
             width: 100%;
             height: 100%;
             background: var(--card-bg);
-            padding: 2vh 3vw; /* Ekran boyutuna göre dinamik boşluk */
+            padding: 2vh 3vw;
             box-sizing: border-box;
             border-top: 1vh solid var(--gold-primary);
             display: flex;
@@ -52,13 +52,11 @@
             margin-bottom: 1.5vh;
         }
 
-        .logo-area {
-            text-align: left;
-        }
+        .logo-area { text-align: left; }
 
         .logo-text {
             font-family: 'Playfair Display', serif;
-            font-size: 3vh; /* Dinamik yazı boyutu */
+            font-size: 3vh;
             font-weight: 700;
             color: var(--gold-primary);
             letter-spacing: 1px;
@@ -88,21 +86,19 @@
             font-size: 1.8vh;
         }
 
-        .payment-banner strong {
-            color: #d32f2f;
-        }
+        .payment-banner strong { color: #d32f2f; }
 
-        /* Tablo Tasarımı - Ekrana yayılması için flex-grow eklendi */
+        /* Tablo Tasarımı */
         .tables-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2vw;
-            flex-grow: 1; /* Kalan tüm boşluğu doldurur */
+            flex-grow: 1;
         }
 
         table {
             width: 100%;
-            height: 100%; /* Tablonun dikeyde uzamasını sağlar */
+            height: 100%;
             border-collapse: collapse;
             background: var(--card-bg);
             overflow: hidden;
@@ -125,7 +121,7 @@
             padding: 1vh 1vw;
             text-align: center;
             border-bottom: 1px solid var(--border-color);
-            font-size: 3vh; /* Rakamların ekranda büyük ve net görünmesi için */
+            font-size: 3vh;
             font-weight: 700;
         }
 
@@ -137,13 +133,8 @@
             line-height: 1.2;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover {
-            background-color: #fafafa;
-        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: #fafafa; }
 
         .strike {
             text-decoration: line-through;
@@ -168,32 +159,18 @@
             color: var(--gold-primary);
         }
 
-        /* Mobil Uyumluluk - Mobilde kaydırmaya izin ver ve alt alta diz */
+        /* Mobil Uyumluluk */
         @media (max-width: 900px) {
             body {
                 height: auto;
                 min-height: 100vh;
-                overflow-y: auto; /* Mobilde scroll açılır */
+                overflow-y: auto;
             }
-            .container {
-                padding: 15px;
-            }
-            .tables-wrapper {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .logo-area {
-                text-align: center;
-                margin-bottom: 10px;
-            }
-            .contact-info {
-                text-align: center;
-            }
-            /* Mobilde dinamik (vh) fontları sabitleyelim ki çok küçülmesin */
+            .container { padding: 15px; }
+            .tables-wrapper { grid-template-columns: 1fr; gap: 15px; }
+            header { flex-direction: column; text-align: center; }
+            .logo-area { text-align: center; margin-bottom: 10px; }
+            .contact-info { text-align: center; }
             .logo-text { font-size: 24px; }
             .contact-info { font-size: 14px; }
             .payment-banner { font-size: 14px; padding: 10px; }
@@ -235,7 +212,7 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-left">
-                    <tr><td colspan="4" style="font-size:14px;">Yükleniyor...</td></tr>
+                    <tr><td colspan="4" style="font-size:14px;">Canlı Fiyatlar Yükleniyor...</td></tr>
                 </tbody>
             </table>
 
@@ -249,7 +226,7 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-right">
-                    <tr><td colspan="4" style="font-size:14px;">Yükleniyor...</td></tr>
+                    <tr><td colspan="4" style="font-size:14px;">Canlı Fiyatlar Yükleniyor...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -261,74 +238,98 @@
     </div>
 
     <script>
-        // Google Sheets ID ve GID
         const SHEET_ID = '12PVBJ0OrpewrVomn_x5NLHE7jAHgmZnbZkcORgrZYm4';
         const GID = '1292736467';
         
-        // Bu URL, e-tabloyu CSV formatında çeker (Web'de Yayınla adımı zorunludur)
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+        // CSV yerine TSV (Sekmeyle Ayrılmış) formatı ile çekiyoruz. Bu sayede içindeki virgüller kodu bozmaz.
+        const TSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=tsv&gid=${GID}`;
 
-        // Zamanı güncelleme fonksiyonu
         function updateTime() {
             const now = new Date();
             const timeString = now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('last-update').innerText = timeString;
         }
 
-        // Veriyi çekip ekrana basma
         async function fetchGoldPrices() {
             try {
-                const response = await fetch(CSV_URL);
-                if (!response.ok) throw new Error("Veri çekilemedi. Tablonun 'Webde Yayınla' ayarını kontrol edin.");
+                const response = await fetch(TSV_URL);
+                if (!response.ok) throw new Error("Google sunucusuna erişilemedi.");
                 
-                const csvText = await response.text();
-                parseAndRenderCSV(csvText);
+                const textData = await response.text();
+                
+                // Güvenlik Önlemi: Eğer dönen veri HTML sayfasıysa (Google Drive Giriş Sayfası vs.),
+                // bu tablonun "Web'de Yayınla" ayarının YAPILMADIĞI anlamına gelir.
+                if (textData.toLowerCase().includes("<!doctype html>")) {
+                    throw new Error("Tablo 'Web'de Yayınla' olarak ayarlanmamış.");
+                }
+
+                parseAndRender(textData);
                 updateTime();
 
             } catch (error) {
                 console.error("Hata:", error);
-                document.getElementById('tbody-left').innerHTML = '<tr><td colspan="4" style="color:red; font-size:14px;">Veri çekme hatası! Lütfen Google Sheets ayarlarını kontrol edin.</td></tr>';
-                document.getElementById('tbody-right').innerHTML = '';
+                const errorMsg = `<tr><td colspan="4" style="color:#d32f2f; font-size:2vh; padding:3vh;">
+                    <b>Canlı bağlantı kurulamadı!</b><br><br>
+                    <small>Lütfen Google Sheets dosyanızda şu işlemi yaptığınızdan emin olun:<br>
+                    <i>Dosya > Paylaş > Web'de Yayınla > Tüm Belge > Virgülle Ayrılmış Değerler</i></small>
+                </td></tr>`;
+                document.getElementById('tbody-left').innerHTML = errorMsg;
+                document.getElementById('tbody-right').innerHTML = errorMsg;
             }
         }
 
-        function parseAndRenderCSV(csvData) {
-            // Basit CSV Parser
-            const rows = csvData.split('\n').map(row => row.split(',').map(cell => cell.replace(/"/g, '').trim()));
+        function cleanPrice(price) {
+            // Hücre boşsa, 0 ise veya Excel hatası varsa "-" basar
+            if (!price || price === "0" || price === "" || price === "#DIV/0!" || price === "#NUM!") return "-";
+            return price;
+        }
+
+        function parseAndRender(tsvData) {
+            // Veriyi "\t" (Sekme) ve satır başı karakterleri ile güvenli şekilde parçalıyoruz
+            const rows = tsvData.split('\n').map(row => row.split('\t').map(cell => cell.replace(/\r/g, '').trim()));
             
             let htmlLeft = '';
             let htmlRight = '';
 
+            // SÜTUN KOORDİNATLARI: (D=3, E=4, F=5) ve (I=8, J=9, K=10)
+            // SATIR KOORDİNATLARI: Excel 3. Satır = JavaScript [2]
+            
             const leftData = [
-                { name: "24 AYAR GRAM<br><small>(50-100)</small>", buy: rows[2]?.[1] || "6583", list: rows[2]?.[2] || "7050", discount: rows[2]?.[3] || "6662" },
-                { name: "24 AYAR GRAM<br><small>(5-10-20)</small>", buy: rows[3]?.[1] || "6596", list: rows[3]?.[2] || "7060", discount: rows[3]?.[3] || "6672" },
-                { name: "24 AYAR GRAM<br><small>(1 GRAMLIK)</small>", buy: rows[4]?.[1] || "6603", list: rows[4]?.[2] || "7074", discount: rows[4]?.[3] || "6686" },
-                { name: "22 AYAR BİLEZİK", buy: rows[5]?.[1] || "6016", list: rows[5]?.[2] || "7112", discount: rows[5]?.[3] || "6259" },
-                { name: "18 AYAR ÜRÜNLER", buy: rows[6]?.[1] || "4749", list: rows[6]?.[2] || "0", discount: rows[6]?.[3] || "0" },
-                { name: "14 AYAR ÜRÜNLER", buy: rows[7]?.[1] || "3760", list: rows[7]?.[2] || "6162", discount: rows[7]?.[3] || "5238" },
-                { name: "8 AYAR ÜRÜNLER", buy: rows[8]?.[1] || "1979", list: rows[8]?.[2] || "4199", discount: rows[8]?.[3] || "3570" },
+                { name: "24 AYAR GRAM<br><small>(50-100)</small>", buy: rows[2]?.[3], list: rows[2]?.[4], discount: rows[2]?.[5] },
+                { name: "24 AYAR GRAM<br><small>(5-10-20)</small>", buy: rows[3]?.[3], list: rows[3]?.[4], discount: rows[3]?.[5] },
+                { name: "24 AYAR GRAM<br><small>(1 GRAMLIK)</small>", buy: rows[4]?.[3], list: rows[4]?.[4], discount: rows[4]?.[5] },
+                { name: "22 AYAR BİLEZİK", buy: rows[5]?.[3], list: rows[5]?.[4], discount: rows[5]?.[5] },
+                { name: "18 AYAR ÜRÜNLER", buy: rows[6]?.[3], list: rows[6]?.[4], discount: rows[6]?.[5] },
+                { name: "14 AYAR ÜRÜNLER", buy: rows[7]?.[3], list: rows[7]?.[4], discount: rows[7]?.[5] },
+                { name: "8 AYAR ÜRÜNLER", buy: rows[8]?.[3], list: rows[8]?.[4], discount: rows[8]?.[5] }
             ];
 
             const rightData = [
-                { name: "ÇEYREK", buy: rows[2]?.[6] || "10620", list: rows[2]?.[7] || "11579", discount: rows[2]?.[8] || "10943" },
-                { name: "YARIM", buy: rows[3]?.[6] || "21240", list: rows[3]?.[7] || "23088", discount: rows[3]?.[8] || "21818" },
-                { name: "TAM", buy: rows[4]?.[6] || "42349", list: rows[4]?.[7] || "45894", discount: rows[4]?.[8] || "43370" },
-                { name: "GREMSE", buy: rows[5]?.[6] || "106202", list: rows[5]?.[7] || "114735", discount: rows[5]?.[8] || "108425" },
-                { name: "ATA LİRA", buy: rows[6]?.[6] || "43734", list: rows[6]?.[7] || "47235", discount: rows[6]?.[8] || "44638" },
-                { name: "GÜMÜŞ", buy: rows[7]?.[6] || "106", list: rows[7]?.[7] || "126", discount: rows[7]?.[8] || "120" },
-                { name: "ONS ALTIN", buy: rows[8]?.[6] || "4532", list: rows[8]?.[7] || "-", discount: rows[8]?.[8] || "4532" },
+                { name: "ÇEYREK", buy: rows[2]?.[8], list: rows[2]?.[9], discount: rows[2]?.[10] },
+                { name: "YARIM", buy: rows[3]?.[8], list: rows[3]?.[9], discount: rows[3]?.[10] },
+                { name: "TAM", buy: rows[4]?.[8], list: rows[4]?.[9], discount: rows[4]?.[10] },
+                { name: "GREMSE", buy: rows[5]?.[8], list: rows[5]?.[9], discount: rows[5]?.[10] },
+                { name: "ATA LİRA", buy: rows[6]?.[8], list: rows[6]?.[9], discount: rows[6]?.[10] },
+                { name: "GÜMÜŞ", buy: rows[7]?.[8], list: rows[7]?.[9], discount: rows[7]?.[10] },
+                { name: "ONS ALTIN", buy: rows[8]?.[8], list: rows[8]?.[9], discount: rows[8]?.[10] }
             ];
 
             leftData.forEach(item => {
-                let listPrice = (item.list === "0" || item.list === "" || item.list === "#DIV/0!") ? "-" : `<span class="strike">${item.list}</span>`;
-                let discPrice = (item.discount === "0") ? "-" : item.discount;
-                htmlLeft += `<tr><td>${item.name}</td><td>${item.buy}</td><td>${listPrice}</td><td>${discPrice}</td></tr>`;
+                let buyPrice = cleanPrice(item.buy);
+                let listPrice = cleanPrice(item.list);
+                let discPrice = cleanPrice(item.discount);
+                
+                listPrice = (listPrice === "-") ? "-" : `<span class="strike">${listPrice}</span>`;
+                htmlLeft += `<tr><td>${item.name}</td><td>${buyPrice}</td><td>${listPrice}</td><td>${discPrice}</td></tr>`;
             });
 
             rightData.forEach(item => {
-                let listPrice = (item.list === "0" || item.list === "" || item.list === "#DIV/0!") ? "-" : `<span class="strike">${item.list}</span>`;
-                let discPrice = (item.discount === "0") ? "-" : item.discount;
-                htmlRight += `<tr><td>${item.name}</td><td>${item.buy}</td><td>${listPrice}</td><td>${discPrice}</td></tr>`;
+                let buyPrice = cleanPrice(item.buy);
+                let listPrice = cleanPrice(item.list);
+                let discPrice = cleanPrice(item.discount);
+
+                listPrice = (listPrice === "-") ? "-" : `<span class="strike">${listPrice}</span>`;
+                htmlRight += `<tr><td>${item.name}</td><td>${buyPrice}</td><td>${listPrice}</td><td>${discPrice}</td></tr>`;
             });
 
             document.getElementById('tbody-left').innerHTML = htmlLeft;
